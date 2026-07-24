@@ -26,5 +26,5 @@ jobs:
           git config --global user.email "bot-radar@agronegocio.com"
           git add noticias_sorgo.csv
           git commit -m "🤖 Atualização diária do radar [$(date +'%d-%m-%Y')]" || exit 0
-          git pull origin main --rebase
+          git pull origin main --rebase -X theirs
           git push
