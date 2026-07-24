@@ -1,0 +1,23 @@
+name: Rotina Diária de Inteligência - Sorgo
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+jobs:
+  atualizar_radar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pandas feedparser google-genai pydantic
+      - env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python robo_coleta.py
+      - run: |
+          git config --global user.name "Robô Agro (GitHub Actions)"
+          git config --global user.email "bot-radar@agronegocio.com"
+          git add noticias_sorgo.csv
+          git commit -m "🤖 Atualização diária do radar [$(date +'%d-%m-%Y')]" || exit 0
+          git push
